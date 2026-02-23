@@ -1,124 +1,226 @@
-# 🏦 Banking API
+# 🏦 Banking Frontend QA Training System
 
-## 📁 Estrutura do Projeto
 
-```
-banking-api/
-├── backend/
-│   ├── package.json
-│   ├── server.js
-│   ├── db.js
-│   └── routes/
-│       └── accounts.js
-├── frontend-web/
-│   └── index.html
-├── frontend-mobile/
-│   └── index.html
-└── README.md
-```
+**Sistema didático para treinamentos QA Frontend**  
+**Nível:** Júnior/Iniciante  
+**Foco:** Testes manuais de interface web  
+**Data:** Fevereiro 2026
+
+[![API Local](https://img.shields.io/badge/API-localhost:3000-brightgreen)]()
+[![Frontend Web](https://img.shields.io/badge/Frontend-HTML/CSS/JS-gold)]()
 
 ---
 
-## ✅ Pré-requisitos
+## 🎯 OBJETIVO DO EXERCÍCIO
 
-- [Node.js](https://nodejs.org/) v18 ou superior
-- [Postman](https://www.postman.com/downloads/) *(opcional, para testes de API)*
+**Praticar testes manuais de FRONTEND** criando:
+
+1. **10 casos de teste** (UI + API)
+2. **1 plano de teste**
+3. **1 relatório de execução**
+4. **Registro de bugs**
+5. **Matriz de cobertura**
+
+**Simula ambiente real de QA!** 🧪
 
 ---
 
-## 🚀 Como Instalar e Executar
+## 🚀 COMO EXECUTAR (3 MINUTOS)
 
-### 1. Instalar as dependências
+### Pré-requisitos
+```
+Node.js 18+ (node --version)
+Chrome/Firefox
+```
 
+### 1. Backend API
 ```bash
-cd backend
 npm install
-```
-
-### 2. Iniciar o servidor
-
-```bash
 npm run dev
 ```
+✅ **API:** http://localhost:3000  
+✅ **Swagger:** http://localhost:3000/api-docs
 
-> O servidor estará rodando em [**http://localhost:3000**](http://localhost:3000)
-
-### 3. Abrir os frontends
-
-Abrir diretamente no browser — **não precisa de servidor adicional**.
-
-| Interface | Como abrir |
-|---|---|
-| Frontend Web (Desktop) | Abrir `frontend-web/index.html` no Chrome |
-| Frontend Mobile | Abrir `frontend-mobile/index.html` no Chrome |
+### 2. Frontend Web
+```
+Abrir frontend-web/index.html no navegador
+```
+✅ **Interface:** Cards + Tabela responsiva
 
 ---
 
-## 🔗 URLs do Sistema
+## 📋 REQUISITOS FUNCTIONAIS (8 RF-FE)
 
-| Recurso | URL |
-|---|---|
-| API | http://localhost:3000 |
-| Swagger (documentação) | http://localhost:3000/api-docs |
-| Frontend Web | `frontend-web/index.html` |
-| Frontend Mobile | `frontend-mobile/index.html` |
+| ID | Funcionalidade | Componentes | API Endpoint |
+|----|----------------|-------------|--------------|
+| **RF-FE001** | Criar Conta | Form 4 campos + botão | POST /accounts |
+| **RF-FE002** | Listar Contas | Tabela + Refresh | GET /accounts |
+| **RF-FE003** | Atualizar Conta | Form ID + nome/email | PUT /accounts/{id} |
+| **RF-FE004** | Deletar Conta | Botão Delete + ID | DELETE /accounts/{id} |
+| **RF-FE005** | Depósito | Form ID + valor | POST /accounts/{id}/deposit |
+| **RF-FE006** | Transferência | Form origem/destino/valor | POST /accounts/{id}/transfer |
+| **RF-FE007** | Feedback Visual | JSON colorido + Toast | Todas ações |
+| **RF-FE008** | UI Responsiva | Hover + adaptação mobile | Layout |
+
+**Especificação completa:** `3-especificacao-completa.html`
 
 ---
 
-## 📡 Endpoints da API
+## 📝 EXERCÍCIO PRÁTICO — PASSO A PASSO
 
-| Método | Endpoint | Descrição |
-|---|---|---|
-| `GET` | `/accounts` | Lista todas as contas |
-| `POST` | `/accounts` | Cria uma nova conta |
-| `GET` | `/accounts/:id` | Busca conta por ID |
-| `PUT` | `/accounts/:id` | Atualiza dados da conta |
-| `DELETE` | `/accounts/:id` | Remove uma conta |
-| `POST` | `/accounts/:id/deposit` | Realiza um depósito |
-| `POST` | `/accounts/:id/transfer` | Transfere para outra conta |
+### 1️⃣ CASOS DE TESTE (10 OBRIGATÓRIOS)
 
-### Exemplo — Criar conta
+**TEMPLATE:**
+```
+ID: CT-FE-001
+Título: Criar conta com dados válidos
+Pré-condições: Backend rodando, sem contas
+Passos:
+1. Abrir index.html
+2. Nome: "João Silva"
+3. Email: "joao@test.com"
+4. CPF: "123.456.789-00"
+5. Balance: "1000"
+6. Clicar "Create Account"
+Resultado Esperado:
+-  JSON verde com status 201
+-  Form limpo automaticamente
+-  Toast "Account created"
+-  Tabela mostra 1 conta
+Requisito: RF-FE001
+```
 
-```bash
-curl -X POST http://localhost:3000/accounts \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "João Silva",
-    "email": "joao@email.com",
-    "cpf": "111.111.111-11",
-    "initialBalance": 500
-  }'
+**EXEMPLO NEGATIVO:**
+```
+CT-FE-002: CPF duplicado
+... repetir mesmo CPF → JSON vermelho (400)
+```
+
+### 2️⃣ PLANO DE TESTE
+
+```
+PROJETO: Banking Frontend QA
+VERSÃO: 1.0
+RESPONSÁVEL: [Seu Nome]
+DATA: [23/02/2026]
+
+ESCOPO:
+✅ RF-FE001 a RF-FE008
+❌ Performance/Segurança
+
+ABORDAGEM: Testes manuais + DevTools
+AMBIENTE: localhost:3000
+
+CRONOGRAMA:
+-  Elaboração: 1h
+-  Execução: 1h  
+-  Relatório: 1h
+
+CRITÉRIOS: Cobertura ≥ 80%
+```
+
+### 3️⃣ RELATÓRIO DE EXECUÇÃO
+
+| ID | Título | Status | Observação |
+|----|--------|--------|------------|
+| CT-FE-001 | Criar válida | ✅ | Tabela ok |
+| CT-FE-002 | CPF duplicado | ❌ | Sem toast |
+| CT-FE-003 | ... | 🔶 | Backend off |
+
+**Status:** ✅ Passou | ❌ Falhou | 🔶 Bloqueado
+
+### 4️⃣ REGISTRO DE BUGS
+
+```
+BUG-FE-001
+TÍTULO: Toast não aparece em erro
+SEVERIDADE: Média
+PASSOS:
+1. Criar conta CPF duplicado
+ESPERADO: Toast vermelho
+OBTIDO: Sem feedback visual
+EVIDÊNCIA: [Screenshot]
+```
+
+### 5️⃣ COBERTURA DE TESTES
+
+```
+FÓRMULA: (RF testados ÷ 8) × 100
+
+MATRIZ DE RASTREABILIDADE:
+RF-FE001 → CT-FE001,002 ✅
+RF-FE002 → CT-FE003 ✅
+... até RF-FE008
+
+COBERTURA FINAL: 100% (8/8 RF)
 ```
 
 ---
 
-## 🧪 Testes com Postman
+## 📦 ENTREGÁVEIS (1 DOCX)
 
-1. Abrir o Postman
-2. Clicar em **Import**
-3. Importar o arquivo `Banking_API_Postman_Collection.json`
-4. Garantir que a API está rodando
-5. Executar os requests individualmente **ou** usar **Run Collection** na pasta `04 — Regressão E2E` para rodar o fluxo completo
+**Crie UM documento Word com:**
 
----
-
-## ⚠️ Observações
-
-- Os dados são armazenados **em memória** — ao reiniciar o servidor, todas as contas são apagadas
-- A API **não tem autenticação** — foi simplificada propositalmente para foco nos testes
-- A porta padrão é **3000** — se estiver ocupada, alterar em `server.js` na última linha
+1. **10 casos de teste** completos
+2. **Plano de teste** preenchido  
+3. **Tabela execução** (status + prints)
+4. **Bugs encontrados** (mínimo 1)
+5. **Matriz cobertura** + percentual
 
 ---
 
-## 📚 Artefatos de QA incluídos
+## 💡 DICAS PARA ALUNO
 
-| Artefato | Arquivo |
-|---|---|
-| Casos de Teste | `1-CasosDeTeste.pdf` |
-| Plano de Teste | `2-PlanoDeTeste.pdf` |
-| Relatorio de Teste | `3-RelatorioDeTeste.pdf` |
-| Registro de Bug | `4-RegistroBug.pdf` |
-| Cobertura de Teste | `5-CoberturaDeTeste.pdf` |
-| Collection Postman | `Banking_API_Postman_Collection.json` |
+```
+🔍 DEVTOOLS (F12):
+-  Network → Status 200/400/404
+-  Console → Erros JavaScript
+-  Toggle Device → Testar mobile
+
+🧪 CENÁRIOS IMPORTANTES:
+-  Campos vazios
+-  CPF duplicado/inválido
+-  Saldo insuficiente
+-  ID inexistente
+-  Valores zero/negativos
+
+📸 EVIDÊNCIAS:
+-  Screenshot JSON resposta
+-  Tabela antes/depois
+-  Console erros
+```
+
+---
+
+## ❓ PERGUNTAS FREQUENTES
+
+**Q: Não encontrei bugs?**  
+A: Registre que "todos testes passaram" ✅
+
+**Q: Backend não funciona?**  
+A: `npm run dev` + verificar porta 3000
+
+**Q: Como testar responsivo?**  
+A: F12 → Toggle Device Toolbar → 375px
+
+**Q: Swagger para validar API?**  
+A: http://localhost:3000/api-docs
+
+---
+
+## 📚 ARQUIVOS DO PROJETO
+
+```
+├── index.html              (Frontend Web luxuoso)
+├── server.js              (API Node.js)
+├── accounts.js            (Lógica negócios)
+├── package.json           (Dependências)
+├── 3-especificacao-completa.html (Requisitos)
+└── README.md              (Você está aqui!)
+```
+
+---
+
+**🧪 Bons testes!**  
 
 ---
