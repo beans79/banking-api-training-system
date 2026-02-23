@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Esboço Inicial - Banking API</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 960px; margin: 24px auto; line-height: 1.5; }
+    h1, h2, h3 { color: #1f2933; }
+    h1 { border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; }
+    code { background: #f3f4f6; padding: 2px 4px; border-radius: 3px; }
+    ul { margin-left: 20px; }
+    strong { color: #111827; }
+  </style>
+</head>
+<body>
+
+<h1>Proposta de Sistema — Banking API para Treino de QA</h1>
+
+<h2>Visão Geral</h2>
+<p>
+  Este documento descreve a <strong>ideia inicial</strong> de um sistema simples de banco digital,
+  cujo principal objetivo é servir como ambiente de treino para QA entry level, com foco em
+  teste de API, teste manual, regressão e documentação de testes.
+</p>
+<p>
+  O sistema deve ser deliberadamente simples, mas completo o suficiente para permitir:
+</p>
+<ul>
+  <li>Teste de operações CRUD em API REST.</li>
+  <li>Teste de fluxos de negócio comuns (depósito, transferência).</li>
+  <li>Teste de frontends consumindo a mesma API (web desktop + web mobile-like).</li>
+  <li>Produção de artefatos de QA (plano de teste, casos de teste, relatórios etc.).</li>
+</ul>
+
+<h2>Objetivos do Sistema</h2>
+<ul>
+  <li>Criar uma <strong>API REST de banco</strong> com:
+    <ul>
+      <li>CRUD de conta bancária.</li>
+      <li>Operação de depósito (receber dinheiro).</li>
+      <li>Operação de transferência (enviar dinheiro).</li>
+    </ul>
+  </li>
+  <li>Expor a API com <strong>documentação interativa (Swagger)</strong>.</li>
+  <li>Criar dois frontends simples:
+    <ul>
+      <li>Interface web “desktop”.</li>
+      <li>Interface web com layout “mobile-like”.</li>
+    </ul>
+  </li>
+  <li>Servir como base prática para:
+    <ul>
+      <li>Treinar QA em <strong>teste manual de API</strong>.</li>
+      <li>Demonstrar testes com Postman/Swagger.</li>
+      <li>Exercitar conceitos de plano de teste, regressão, cobertura e bug report.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>Escopo Inicial (High Level)</h2>
+
+<h3>Backend</h3>
+<ul>
+  <li>Node.js + Express.</li>
+  <li>Armazenamento em memória (sem BD real).</li>
+  <li>Endpoints básicos para contas e transações.</li>
+</ul>
+
+<h3>Frontend Web</h3>
+<ul>
+  <li>CRUD de contas e operações de depósito/transferência.</li>
+  <li>Visualização em tabela das contas.</li>
+</ul>
+
+<h3>Frontend Mobile-like</h3>
+<ul>
+  <li>Visualização em layout de “tela de celular”.</li>
+  <li>Card de saldo total.</li>
+  <li>Formulários simplificados para as mesmas operações da API.</li>
+</ul>
+
+<h2>Não Escopo (Neste Momento)</h2>
+<ul>
+  <li>Autenticação/autorização.</li>
+  <li>Segurança avançada (tokens, criptografia).</li>
+  <li>Persistência em banco de dados.</li>
+  <li>Performance e escalabilidade.</li>
+  <li>Testes automatizados de código (unitários ou E2E) — foco é teste manual.</li>
+</ul>
+
+</body>
+</html>

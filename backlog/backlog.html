@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Backlog de Tarefas - Banking API</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 960px; margin: 24px auto; line-height: 1.5; }
+    h1, h2, h3 { color: #1f2933; }
+    h1 { border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; }
+    .task-list { margin: 0; padding: 0; list-style: none; }
+    .task { border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px 14px; margin-bottom: 10px; }
+    .task-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .task-id { font-weight: bold; color: #1f2933; }
+    .task-meta { font-size: 12px; color: #6b7280; }
+    .task-title { font-weight: bold; margin-bottom: 4px; }
+    .task-section { margin-top: 24px; }
+    .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 4px; }
+    .badge-backend { background: #eff6ff; color: #1d4ed8; }
+    .badge-frontend { background: #ecfdf5; color: #15803d; }
+    .badge-doc { background: #fef3c7; color: #92400e; }
+    .badge-high { background: #fee2e2; color: #b91c1c; }
+    .badge-medium { background: #e0f2fe; color: #0369a1; }
+    .badge-low { background: #f3e8ff; color: #6b21a8; }
+    ul { margin-left: 18px; }
+  </style>
+</head>
+<body>
+
+<h1>Backlog de Tarefas — Banking API Training System</h1>
+
+<p>
+  Este documento traduz a <strong>especificação funcional completa</strong> em tarefas de desenvolvimento.
+  As 10 primeiras tarefas estão detalhadas (prontas para desenvolvimento) e as demais aparecem apenas
+  com título, compondo o backlog para refinamento e estimativa futura.
+</p>
+
+<div class="task-section">
+  <h2>Top 10 tarefas detalhadas (MVP)</h2>
+  <ul class="task-list">
+
+    <!-- TASK 1 -->
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-001</span>
+        <span class="task-meta">
+          Módulo: Backend
+          <span class="badge badge-backend">Backend</span>
+          <span class="badge badge-high">Alta prioridade</span>
+        </span>
+      </div>
+      <div class="task-title">Configurar projeto Node.js + Express e servidor base</div>
+      <p><strong>Descrição:</strong> Criar a estrutura inicial do projeto backend, configurar o Express e expor um endpoint raiz para verificação de saúde do servidor.</p>
+      <p><strong>Critérios de aceite:</strong></p>
+      <ul>
+        <li>Projeto Node.js criado com <code>package.json</code> e dependências principais (<code>express</code>, <code>cors</code>).</li>
+        <li>Servidor iniciado com <code>npm run dev</code> ouvindo na porta <code>3000</code>.</li>
+        <li>Endpoint <code>GET /</code> responde com JSON simples (<code>{ "message": "Banking API rodando" }</code>).</li>
+      </ul>
+    </li>
+
+    <!-- TASK 2 -->
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-002</span>
+        <span class="task-meta">
+          Módulo: Backend
+          <span class="badge badge-backend">Backend</span>
+          <span class="badge badge-high">Alta prioridade</span>
+        </span>
+      </div>
+      <div class="task-title">Implementar modelo em memória para armazenamento de contas</div>
+      <p><strong>Descrição:</strong> Criar estrutura simples em memória para armazenar as contas bancárias, contendo os campos definidos na especificação (<code>id</code>, <code>name</code>, <code>email</code>, <code>cpf</code>, <code>balance</code>, <code>createdAt</code>).</p>
+      <p><strong>Critérios de aceite:</strong></p>
+      <ul>
+        <li>Arquivo dedicado (ex.: <code>db.js</code>) expondo um array de contas.</li>
+        <li>Capacidade de inserir, ler e remover objetos de conta nesse array.</li>
+        <li>Nenhuma dependência de banco de dados externo (tudo em memória).</li>
+      </ul>
+    </li>
+
+    <!-- TASK 3 -->
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-003</span>
+        <span class="task-meta">
+          Módulo: Backend
+          <span class="badge badge-backend">Backend</span>
+          <span class="badge badge-high">Alta prioridade</span>
+        </span>
+      </div>
+      <div class="task-title">Implementar endpoint POST /accounts (criar conta)</div>
+      <p><strong>Descrição:</strong> Implementar o endpoint de criação de conta conforme a especificação, incluindo validação de campos obrigatórios, validação de saldo inicial e unicidade de CPF.</p>
+      <p><strong>Critérios de aceite:</strong></p>
+      <ul>
+        <li><code>POST /accounts</code> aceita <code>name</code>, <code>email</code>, <code>cpf</code>, <code>initialBalance</code>.</li>
+        <li>Retorna 201 com objeto da conta criada e campos completos (<code>id</code>, <code>balance</code>, <code>createdAt</code> etc.).</li>
+        <li>Retorna 400 se faltar campo obrigatório ou se <code>initialBalance &lt; 0</code>.</li>
+        <li>Retorna 400 se o <code>cpf</code> já existir em alguma conta em memória.</li>
+      </ul>
+    </li>
+
+    <!-- TASK 4 -->
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-004</span>
+        <span class="task-meta">
+          Módulo: Backend
+          <span class="badge badge-backend">Backend</span>
+          <span class="badge badge-high">Alta prioridade</span>
+        </span>
+      </div>
+      <div class="task-title">Implementar endpoints GET /accounts e GET /accounts/{id}</div>
+      <p><strong>Descrição:</strong> Implementar os endpoints de listagem de todas as contas e busca por ID, incluindo tratamento de conta não encontrada.</p>
+      <p><strong>Critérios de aceite:</strong></p>
+      <ul>
+        <li><code>GET /accounts</code> retorna array de contas (pode ser vazio).</li>
+        <li><code>GET /accounts/{id}</code> retorna 200 com conta correspondente quando o ID existe.</li>
+        <li><code>GET /accounts/{id}</code> retorna 404 com <code>{ "error": "Conta não encontrada" }</code> quando o ID não existe.</li>
+      </ul>
+    </li>
+
+    <!-- TASK 5 -->
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-005</span>
+        <span class="task-meta">
+          Módulo: Backend
+          <span class="badge badge-backend">Backend</span>
+          <span class="badge badge-medium">Média prioridade</span>
+        </span>
+      </div>
+      <div class="task-title">Implementar endpoint PUT /accounts/{id} (atualizar conta)</div>
+      <p><strong>Descrição:</strong> Implementar o endpoint de atualização de conta, permitindo alterar <code>name</code> e <code>email</code>, sem modificar <code>cpf</code> e <code>balance</code>.</p>
+      <p><strong>Critérios de aceite:</strong></p>
+      <ul>
+        <li><code>PUT /accounts/{id}</code> aceita campos opcionais <code>name</code> e <code>email</code>.</li>
+        <li>Retorna 200 com conta atualizada quando o ID existe.</li>
+        <li>Retorna 404 com mensagem de erro quando a conta não existe.</li>
+        <li>Valores de <code>cpf</code> e <code>balance</code> permanecem inalterados após a atualização.</li>
+      </ul>
+    </li>
+
+    <!-- TASK 6 -->
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-006</span>
+        <span class="task-meta">
+          Módulo: Backend
+          <span class="badge badge-backend">Backend</span>
+          <span class="badge badge-medium">Média prioridade</span>
+        </span>
+      </div>
+      <div class="task-title">Implementar endpoint DELETE /accounts/{id} (remover conta)</div>
+      <p><strong>Descrição:</strong> Implementar a remoção de conta em memória, retornando mensagens adequadas para sucesso e erro.</p>
+      <p><strong>Critérios de aceite:</strong></p>
+      <ul>
+        <li><code>DELETE /accounts/{id}</code> remove a conta do array quando o ID existe.</li>
+        <li>Retorna 200 com <code>{ "message": "Conta removida com sucesso" }</code> em caso de sucesso.</li>
+        <li>Retorna 404 com <code>{ "error": "Conta não encontrada" }</code> se a conta não existir.</li>
+      </ul>
+    </li>
+
+    <!-- TASK 7 -->
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-007</span>
+        <span class="task-meta">
+          Módulo: Backend
+          <span class="badge badge-backend">Backend</span>
+          <span class="badge badge-high">Alta prioridade</span>
+        </span>
+      </div>
+      <div class="task-title">Implementar endpoint POST /accounts/{id}/deposit (depósito)</div>
+      <p><strong>Descrição:</strong> Implementar a funcionalidade de depósito, incluindo validação de valor e tratamento de conta inexistente.</p>
+      <p><strong>Critérios de aceite:</strong></p>
+      <ul>
+        <li><code>POST /accounts/{id}/deposit</code> aceita <code>{ "amount": number }</code>.</li>
+        <li>Retorna 200 com <code>{ "message": "Depósito realizado", "balance": &lt;novoSaldo&gt; }</code> quando <code>amount &gt; 0</code> e conta existe.</li>
+        <li>Retorna 400 com mensagem de erro quando <code>amount &lt;= 0</code>.</li>
+        <li>Retorna 404 com erro de conta não encontrada quando o ID não existe.</li>
+      </ul>
+    </li>
+
+    <!-- TASK 8 -->
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-008</span>
+        <span class="task-meta">
+          Módulo: Backend
+          <span class="badge badge-backend">Backend</span>
+          <span class="badge badge-high">Alta prioridade</span>
+        </span>
+      </div>
+      <div class="task-title">Implementar endpoint POST /accounts/{id}/transfer (transferência)</div>
+      <p><strong>Descrição:</strong> Implementar a transferência entre contas, com validações de saldo, conta destino, valor positivo e proibição de transferir para a mesma conta.</p>
+      <p><strong>Critérios de aceite:</strong></p>
+      <ul>
+        <li><code>POST /accounts/{id}/transfer</code> aceita <code>{ "targetId": string, "amount": number }</code>.</li>
+        <li>Valida existência das contas origem e destino.</li>
+        <li>Retorna 200 com <code>{ "message": "Transferência realizada com sucesso", "sourceBalance": ..., "targetBalance": ... }</code> em caso de sucesso.</li>
+        <li>Retorna 400 para:
+          <ul>
+            <li>Saldo insuficiente.</li>
+            <li><code>amount &lt;= 0</code>.</li>
+            <li>Origem e destino iguais.</li>
+          </ul>
+        </li>
+        <li>Retorna 404 se origem ou destino forem inexistentes.</li>
+      </ul>
+    </li>
+
+    <!-- TASK 9 -->
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-009</span>
+        <span class="task-meta">
+          Módulo: Backend / Documentação
+          <span class="badge badge-backend">Backend</span>
+          <span class="badge badge-doc">Doc</span>
+          <span class="badge badge-medium">Média prioridade</span>
+        </span>
+      </div>
+      <div class="task-title">Configurar Swagger UI e documentar todos os endpoints</div>
+      <p><strong>Descrição:</strong> Integrar Swagger UI ao projeto e documentar todos os endpoints da Banking API, incluindo modelos de request/response e exemplos.</p>
+      <p><strong>Critérios de aceite:</strong></p>
+      <ul>
+        <li>Swagger disponível em <code>http://localhost:3000/api-docs</code>.</li>
+        <li>Todos os endpoints (<code>/accounts</code>, <code>/accounts/{id}</code>, <code>/deposit</code>, <code>/transfer</code>) documentados com:
+          <ul>
+            <li>Resumo e descrição.</li>
+            <li>Parâmetros de path e body.</li>
+            <li>Códigos de resposta esperados (200, 201, 400, 404).</li>
+          </ul>
+        </li>
+        <li>É possível executar chamadas pela interface do Swagger.</li>
+      </ul>
+    </li>
+
+    <!-- TASK 10 -->
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-010</span>
+        <span class="task-meta">
+          Módulo: Frontend Web
+          <span class="badge badge-frontend">Frontend</span>
+          <span class="badge badge-high">Alta prioridade</span>
+        </span>
+      </div>
+      <div class="task-title">Implementar página frontend-web com cards básicos e tabela de contas</div>
+      <p><strong>Descrição:</strong> Criar o frontend desktop em <code>frontend-web/index.html</code>, com cards para operações principais e tabela para listar contas, consumindo diretamente a API.</p>
+      <p><strong>Critérios de aceite:</strong></p>
+      <ul>
+        <li>Página exibe cards para:
+          <ul>
+            <li>Criar conta.</li>
+            <li>Atualizar conta.</li>
+            <li>Depósito.</li>
+            <li>Transferência.</li>
+            <li>Buscar / Deletar conta.</li>
+          </ul>
+        </li>
+        <li>Área “Resposta da API” mostra o JSON retornado, destacando erros.</li>
+        <li>Seção “Todas as Contas” mostra tabela com ID abreviado, Nome, Email, CPF, Saldo.</li>
+        <li>Botão “Atualizar Lista” consome <code>GET /accounts</code> e atualiza a tabela.</li>
+      </ul>
+    </li>
+
+  </ul>
+</div>
+
+<div class="task-section">
+  <h2>Backlog (títulos para refinamento e estimativa)</h2>
+  <ul class="task-list">
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-011</span>
+        <span class="task-meta">Frontend Mobile-like</span>
+      </div>
+      <div class="task-title">Criar layout base do frontend-mobile com “phone frame” e navegação por abas</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-012</span>
+        <span class="task-meta">Frontend Mobile-like</span>
+      </div>
+      <div class="task-title">Implementar aba Início com card de saldo total e lista de contas</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-013</span>
+        <span class="task-meta">Frontend Mobile-like</span>
+      </div>
+      <div class="task-title">Implementar aba Conta com formulário de criação de conta</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-014</span>
+        <span class="task-meta">Frontend Mobile-like</span>
+      </div>
+      <div class="task-title">Implementar aba Transações com formulários de Depósito e Transferência</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-015</span>
+        <span class="task-meta">Frontend Mobile-like</span>
+      </div>
+      <div class="task-title">Implementar aba Buscar com busca e exclusão de conta por ID</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-016</span>
+        <span class="task-meta">Docs / QA</span>
+      </div>
+      <div class="task-title">Publicar documentação HTML (esboco, requisitos, especificação) dentro da pasta docs/</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-017</span>
+        <span class="task-meta">QA</span>
+      </div>
+      <div class="task-title">Criar e versionar collection do Postman para cobertura dos endpoints da API</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-018</span>
+        <span class="task-meta">QA</span>
+      </div>
+      <div class="task-title">Criar fluxo de regressão E2E no Postman (pasta dedicada com 10 etapas)</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-019</span>
+        <span class="task-meta">QA / Docs</span>
+      </div>
+      <div class="task-title">Formalizar plano de teste e casos de teste em documento Word e README</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-020</span>
+        <span class="task-meta">Frontend Web</span>
+      </div>
+      <div class="task-title">Melhorar feedback visual de erros e sucessos no frontend-web (cores, mensagens)</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-021</span>
+        <span class="task-meta">Frontend Web</span>
+      </div>
+      <div class="task-title">Ajustar responsividade básica do frontend-web para diferentes larguras de tela</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-022</span>
+        <span class="task-meta">Frontend Mobile-like</span>
+      </div>
+      <div class="task-title">Adicionar pequenos ajustes de UX na navegação por abas (estado ativo, foco etc.)</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-023</span>
+        <span class="task-meta">Backend</span>
+      </div>
+      <div class="task-title">Padronizar mensagens de erro e sucesso da API (idioma e formato JSON)</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-024</span>
+        <span class="task-meta">Backend</span>
+      </div>
+      <div class="task-title">Adicionar logs básicos no servidor para criação, depósito e transferência</div>
+    </li>
+
+    <li class="task">
+      <div class="task-header">
+        <span class="task-id">TASK-025</span>
+        <span class="task-meta">Infra / DX</span>
+      </div>
+      <div class="task-title">Criar scripts npm de conveniência (ex.: npm run dev, npm run lint)</div>
+    </li>
+
+  </ul>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxe Bank — Premium Banking Experience</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --dark-gold: #B8941F;
+            --navy: #0A1929;
+            --light-navy: #1A2F42;
+            --cream: #FAF8F3;
+            --light-cream: #FDFCF9;
+            --border-gold: rgba(212, 175, 55, 0.3);
+            --shadow-gold: rgba(212, 175, 55, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--light-navy) 100%);
+            color: var(--cream);
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Header Luxuoso */
+        .header {
+            background: rgba(10, 25, 41, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-gold);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .logo-subtitle {
+            font-size: 11px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: var(--cream);
+            opacity: 0.7;
+            margin-top: -5px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            opacity: 0.8;
+        }
+
+        .nav-link:hover {
+            color: var(--gold);
+            opacity: 1;
+        }
+
+        /* Container Principal */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* Cards Luxuosos */
+        .card {
+            background: linear-gradient(135deg, rgba(26, 47, 66, 0.9) 0%, rgba(10, 25, 41, 0.95) 100%);
+            border: 1px solid var(--border-gold);
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--gold), transparent);
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(212, 175, 55, 0.2);
+        }
+
+        .card:hover::before {
+            opacity: 0.1;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-gold);
+        }
+
+        .card-icon {
+            font-size: 28px;
+            color: var(--gold);
+        }
+
+        .card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--gold);
+            letter-spacing: 1px;
+        }
+
+        /* Form Inputs Luxuosos */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--cream);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(250, 248, 243, 0.05);
+            border: 1px solid var(--border-gold);
+            border-radius: 8px;
+            color: var(--cream);
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: rgba(250, 248, 243, 0.08);
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: rgba(250, 248, 243, 0.3);
+        }
+
+        /* Botões Premium */
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--dark-gold) 100%);
+            color: var(--navy);
+            box-shadow: 0 4px 15px var(--shadow-gold);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px var(--shadow-gold);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-gold);
+            color: var(--gold);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        /* Tabela de Contas Luxuosa */
+        .accounts-section {
+            margin-top: 50px;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .table-container {
+            background: linear-gradient(135deg, rgba(26, 47, 66, 0.9) 0%, rgba(10, 25, 41, 0.95) 100%);
+            border: 1px solid var(--border-gold);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table thead {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .table th {
+            padding: 18px 20px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gold);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-gold);
+        }
+
+        .table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            color: var(--cream);
+            font-size: 14px;
+        }
+
+        .table tbody tr {
+            transition: background 0.3s;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .account-id {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .account-balance {
+            font-weight: 600;
+            color: var(--gold);
+            font-size: 16px;
+        }
+
+        /* Response Display */
+        .response-display {
+            background: rgba(10, 25, 41, 0.6);
+            border: 1px solid var(--border-gold);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: var(--cream);
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .response-success {
+            border-color: rgba(76, 175, 80, 0.5);
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .response-error {
+            border-color: rgba(244, 67, 54, 0.5);
+            background: rgba(244, 67, 54, 0.05);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-gold);
+            border-radius: 50%;
+            border-top-color: var(--gold);
+            animation: spin 0.8s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--dark-gold) 100%);
+            color: var(--navy);
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 6px 25px var(--shadow-gold);
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 2000;
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            .card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div>
+                <div class="logo">Luxe Bank</div>
+                <div class="logo-subtitle">Premium Banking</div>
+            </div>
+            <nav class="nav">
+                <a href="#" class="nav-link">Dashboard</a>
+                <a href="#" class="nav-link">Accounts</a>
+                <a href="#" class="nav-link">Transfers</a>
+                <a href="#" class="nav-link">Support</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Criar Conta -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">✦</span>
+                    <h2 class="card-title">Open New Account</h2>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="createName" class="form-input" placeholder="Enter full name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="createEmail" class="form-input" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tax ID (CPF)</label>
+                    <input type="text" id="createCpf" class="form-input" placeholder="000.000.000-00">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Initial Deposit</label>
+                    <input type="number" id="createBalance" class="form-input" placeholder="0.00" step="0.01">
+                </div>
+                <button class="btn btn-primary" onclick="createAccount()">Create Account</button>
+                <div id="createResponse" class="response-display" style="display: none;"></div>
+            </div>
+
+            <!-- Depósito -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">⬇</span>
+                    <h2 class="card-title">Deposit Funds</h2>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Account ID</label>
+                    <input type="text" id="depositId" class="form-input" placeholder="Enter account ID">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Amount</label>
+                    <input type="number" id="depositAmount" class="form-input" placeholder="0.00" step="0.01">
+                </div>
+                <button class="btn btn-primary" onclick="deposit()">Deposit</button>
+                <div id="depositResponse" class="response-display" style="display: none;"></div>
+            </div>
+
+            <!-- Transferência -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">⇄</span>
+                    <h2 class="card-title">Transfer Funds</h2>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">From Account ID</label>
+                    <input type="text" id="transferSource" class="form-input" placeholder="Source account ID">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">To Account ID</label>
+                    <input type="text" id="transferTarget" class="form-input" placeholder="Destination account ID">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Amount</label>
+                    <input type="number" id="transferAmount" class="form-input" placeholder="0.00" step="0.01">
+                </div>
+                <button class="btn btn-primary" onclick="transfer()">Transfer</button>
+                <div id="transferResponse" class="response-display" style="display: none;"></div>
+            </div>
+
+            <!-- Atualizar Conta -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">✎</span>
+                    <h2 class="card-title">Update Account</h2>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Account ID</label>
+                    <input type="text" id="updateId" class="form-input" placeholder="Enter account ID">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Name</label>
+                    <input type="text" id="updateName" class="form-input" placeholder="New full name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Email</label>
+                    <input type="email" id="updateEmail" class="form-input" placeholder="new@email.com">
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="updateAccount()">Update</button>
+                    <button class="btn btn-secondary" onclick="deleteAccount()">Delete Account</button>
+                </div>
+                <div id="updateResponse" class="response-display" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Tabela de Contas -->
+        <section class="accounts-section">
+            <h2 class="section-title">All Accounts</h2>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Account ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Tax ID</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accountsTable">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px; opacity: 0.5;">
+                                No accounts yet. Create your first account above.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="loadAccounts()">Refresh Accounts</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000';
+
+        // Carregar contas ao iniciar
+        window.addEventListener('DOMContentLoaded', loadAccounts);
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function displayResponse(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = `response-display ${isError ? 'response-error' : 'response-success'}`;
+            element.textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function createAccount() {
+            const name = document.getElementById('createName').value;
+            const email = document.getElementById('createEmail').value;
+            const cpf = document.getElementById('createCpf').value;
+            const initialBalance = parseFloat(document.getElementById('createBalance').value);
+
+            try {
+                const response = await fetch(`${API_URL}/accounts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, cpf, initialBalance })
+                });
+                const data = await response.json();
+                displayResponse('createResponse', data, !response.ok);
+                if (response.ok) {
+                    showToast('Account created successfully!');
+                    loadAccounts();
+                    document.getElementById('createName').value = '';
+                    document.getElementById('createEmail').value = '';
+                    document.getElementById('createCpf').value = '';
+                    document.getElementById('createBalance').value = '';
+                }
+            } catch (error) {
+                displayResponse('createResponse', { error: error.message }, true);
+            }
+        }
+
+        async function deposit() {
+            const id = document.getElementById('depositId').value;
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+
+            try {
+                const response = await fetch(`${API_URL}/accounts/${id}/deposit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount })
+                });
+                const data = await response.json();
+                displayResponse('depositResponse', data, !response.ok);
+                if (response.ok) {
+                    showToast('Deposit completed successfully!');
+                    loadAccounts();
+                }
+            } catch (error) {
+                displayResponse('depositResponse', { error: error.message }, true);
+            }
+        }
+
+        async function transfer() {
+            const sourceId = document.getElementById('transferSource').value;
+            const targetId = document.getElementById('transferTarget').value;
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+
+            try {
+                const response = await fetch(`${API_URL}/accounts/${sourceId}/transfer`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ targetId, amount })
+                });
+                const data = await response.json();
+                displayResponse('transferResponse', data, !response.ok);
+                if (response.ok) {
+                    showToast('Transfer completed successfully!');
+                    loadAccounts();
+                }
+            } catch (error) {
+                displayResponse('transferResponse', { error: error.message }, true);
+            }
+        }
+
+        async function updateAccount() {
+            const id = document.getElementById('updateId').value;
+            const name = document.getElementById('updateName').value;
+            const email = document.getElementById('updateEmail').value;
+
+            try {
+                const response = await fetch(`${API_URL}/accounts/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email })
+                });
+                const data = await response.json();
+                displayResponse('updateResponse', data, !response.ok);
+                if (response.ok) {
+                    showToast('Account updated successfully!');
+                    loadAccounts();
+                }
+            } catch (error) {
+                displayResponse('updateResponse', { error: error.message }, true);
+            }
+        }
+
+        async function deleteAccount() {
+            const id = document.getElementById('updateId').value;
+            if (!confirm('Are you sure you want to delete this account?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/accounts/${id}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                displayResponse('updateResponse', data, !response.ok);
+                if (response.ok) {
+                    showToast('Account deleted successfully!');
+                    loadAccounts();
+                    document.getElementById('updateId').value = '';
+                }
+            } catch (error) {
+                displayResponse('updateResponse', { error: error.message }, true);
+            }
+        }
+
+        async function loadAccounts() {
+            try {
+                const response = await fetch(`${API_URL}/accounts`);
+                const accounts = await response.json();
+                const tbody = document.getElementById('accountsTable');
+                
+                if (accounts.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px; opacity: 0.5;">
+                                No accounts yet. Create your first account above.
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    tbody.innerHTML = accounts.map(acc => `
+                        <tr>
+                            <td class="account-id">${acc.id.substring(0, 8)}...</td>
+                            <td>${acc.name}</td>
+                            <td>${acc.email}</td>
+                            <td>${acc.cpf}</td>
+                            <td class="account-balance">$${acc.balance.toFixed(2)}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading accounts:', error);
+            }
+        }
+    </script>
+</body>
+</html>

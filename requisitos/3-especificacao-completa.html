@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Especificação Funcional Completa - Banking API</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 960px; margin: 24px auto; line-height: 1.5; }
+    h1, h2, h3, h4 { color: #1f2933; }
+    h1 { border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; }
+    code { background: #f3f4f6; padding: 2px 4px; border-radius: 3px; }
+    ul { margin-left: 20px; }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+    th, td { border: 1px solid #e5e7eb; padding: 6px 8px; text-align: left; }
+    th { background: #f9fafb; }
+    strong { color: #111827; }
+  </style>
+</head>
+<body>
+
+<h1>Especificação Funcional Completa — Banking API Training System</h1>
+
+<h2>1. Introdução</h2>
+
+<h3>1.1 Propósito</h3>
+<p>
+  Este documento descreve de forma detalhada os requisitos funcionais, não funcionais, regras de
+  negócio e fluxos principais do <strong>Banking API Training System</strong>, um sistema didático
+  utilizado para demonstrar o ciclo de vida de desenvolvimento de software (SDLC) e práticas de QA.
+</p>
+
+<h3>1.2 Público-alvo</h3>
+<ul>
+  <li>Desenvolvedores backend e frontend.</li>
+  <li>Analistas de QA (júnior a pleno).</li>
+  <li>Instrutores/mentores que utilizarão o sistema em treinamentos.</li>
+</ul>
+
+<h3>1.3 Escopo</h3>
+<ul>
+  <li>API REST (Banking API).</li>
+  <li>Frontends web (desktop e mobile-like).</li>
+  <li>Collection de testes de API (Postman).</li>
+  <li>Artefatos de QA (casos de teste, plano de teste, etc., documentados em outro local).</li>
+</ul>
+
+<h2>2. Visão Geral de Arquitetura</h2>
+<ul>
+  <li><strong>Backend</strong>
+    <ul>
+      <li>Node.js + Express.</li>
+      <li>Memória em processo (sem banco externo).</li>
+      <li>Endpoints sob o path <code>/accounts</code> e sub-recursos.</li>
+    </ul>
+  </li>
+  <li><strong>Frontend Web</strong>
+    <ul>
+      <li>Aplicação estática em <code>frontend-web/index.html</code>.</li>
+      <li>Consome a API em <code>http://localhost:3000</code>.</li>
+    </ul>
+  </li>
+  <li><strong>Frontend Mobile-like</strong>
+    <ul>
+      <li>Aplicação estática em <code>frontend-mobile/index.html</code>.</li>
+      <li>Layout simulando aplicação mobile (390px de largura).</li>
+    </ul>
+  </li>
+  <li><strong>Documentação</strong>
+    <ul>
+      <li>Swagger UI em <code>/api-docs</code>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>3. Requisitos Funcionais da API</h2>
+
+<h3>3.1 Modelo de Dados — Conta</h3>
+
+<p><strong>Nome da entidade:</strong> <code>Account</code></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Campo</th>
+      <th>Tipo</th>
+      <th>Obrigatório</th>
+      <th>Descrição</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>string</td><td>Sim</td><td>Identificador único (UUID)</td></tr>
+    <tr><td><code>name</code></td><td>string</td><td>Sim</td><td>Nome do titular da conta</td></tr>
+    <tr><td><code>email</code></td><td>string</td><td>Sim</td><td>Email do titular</td></tr>
+    <tr><td><code>cpf</code></td><td>string</td><td>Sim</td><td>CPF único do titular</td></tr>
+    <tr><td><code>balance</code></td><td>number</td><td>Sim</td><td>Saldo atual da conta</td></tr>
+    <tr><td><code>createdAt</code></td><td>string</td><td>Sim</td><td>Data/hora de criação em formato ISO</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Regras gerais:</strong></p>
+<ul>
+  <li><code>cpf</code> deve ser único.</li>
+  <li><code>balance</code> nunca pode ser negativo.</li>
+  <li><code>createdAt</code> é definido automaticamente pelo sistema.</li>
+</ul>
+
+<h3>3.2 Endpoint: Criar Conta</h3>
+
+<ul>
+  <li><strong>Método:</strong> <code>POST</code></li>
+  <li><strong>URL:</strong> <code>/accounts</code></li>
+</ul>
+
+<p><strong>Body (JSON):</strong></p>
+<pre><code>{
+  "name": "João Silva",
+  "email": "joao@email.com",
+  "cpf": "111.111.111-11",
+  "initialBalance": 500
+}
+</code></pre>
+
+<p><strong>Validações:</strong></p>
+<ul>
+  <li><code>name</code>, <code>email</code>, <code>cpf</code>, <code>initialBalance</code> obrigatórios.</li>
+  <li><code>initialBalance</code> &gt;= 0.</li>
+  <li><code>cpf</code> não pode existir em outra conta.</li>
+</ul>
+
+<p><strong>Respostas:</strong></p>
+<ul>
+  <li>201 Created: conta criada com <code>balance = initialBalance</code>.</li>
+  <li>400 Bad Request: campos ausentes, <code>initialBalance</code> inválido ou CPF duplicado.</li>
+</ul>
+
+<h3>3.3 Endpoint: Listar Contas</h3>
+<ul>
+  <li><strong>Método:</strong> <code>GET</code></li>
+  <li><strong>URL:</strong> <code>/accounts</code></li>
+  <li><strong>Comportamento:</strong> retorna lista de todas as contas.</li>
+  <li><strong>Resposta:</strong> 200 OK com <code>[]</code> ou lista de contas.</li>
+</ul>
+
+<h3>3.4 Endpoint: Buscar Conta por ID</h3>
+<ul>
+  <li><strong>Método:</strong> <code>GET</code></li>
+  <li><strong>URL:</strong> <code>/accounts/{id}</code></li>
+  <li><strong>Respostas:</strong>
+    <ul>
+      <li>200 OK com objeto <code>Account</code>.</li>
+      <li>404 Not Found com <code>{ "error": "Conta não encontrada" }</code>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>3.5 Endpoint: Atualizar Conta</h3>
+<ul>
+  <li><strong>Método:</strong> <code>PUT</code></li>
+  <li><strong>URL:</strong> <code>/accounts/{id}</code></li>
+</ul>
+
+<p><strong>Body (JSON):</strong></p>
+<pre><code>{
+  "name": "Novo Nome",
+  "email": "novoemail@email.com"
+}
+</code></pre>
+
+<ul>
+  <li>Atualizar apenas campos enviados.</li>
+  <li>Não alterar <code>cpf</code> nem <code>balance</code>.</li>
+  <li>200 OK com conta atualizada.</li>
+  <li>404 Not Found se conta inexistente.</li>
+</ul>
+
+<h3>3.6 Endpoint: Deletar Conta</h3>
+<ul>
+  <li><strong>Método:</strong> <code>DELETE</code></li>
+  <li><strong>URL:</strong> <code>/accounts/{id}</code></li>
+  <li>200 OK com <code>{ "message": "Conta removida com sucesso" }</code>.</li>
+  <li>404 Not Found se conta inexistente.</li>
+</ul>
+
+<h3>3.7 Endpoint: Depósito</h3>
+<ul>
+  <li><strong>Método:</strong> <code>POST</code></li>
+  <li><strong>URL:</strong> <code>/accounts/{id}/deposit</code></li>
+</ul>
+
+<p><strong>Body (JSON):</strong></p>
+<pre><code>{
+  "amount": 200
+}
+</code></pre>
+
+<ul>
+  <li><code>amount</code> obrigatório e &gt; 0.</li>
+  <li>Saldo final = saldo atual + <code>amount</code>.</li>
+  <li>200 OK com <code>{ "message": "Depósito realizado", "balance": &lt;novoSaldo&gt; }</code>.</li>
+  <li>400 Bad Request se <code>amount &lt;= 0</code>.</li>
+  <li>404 Not Found se conta não existir.</li>
+</ul>
+
+<h3>3.8 Endpoint: Transferência</h3>
+<ul>
+  <li><strong>Método:</strong> <code>POST</code></li>
+  <li><strong>URL:</strong> <code>/accounts/{id}/transfer</code></li>
+</ul>
+
+<p><strong>Body (JSON):</strong></p>
+<pre><code>{
+  "targetId": "uuid-destino",
+  "amount": 100
+}
+</code></pre>
+
+<ul>
+  <li><code>targetId</code> obrigatório.</li>
+  <li><code>amount</code> obrigatório e &gt; 0.</li>
+  <li>Origem e destino devem existir.</li>
+  <li>Origem ≠ destino.</li>
+  <li>Origem deve ter saldo suficiente.</li>
+  <li>200 OK com <code>{ "message": "Transferência realizada com sucesso", "sourceBalance": ..., "targetBalance": ... }</code>.</li>
+  <li>400 Bad Request para saldo insuficiente, valor inválido ou contas iguais.</li>
+  <li>404 Not Found se origem ou destino não existirem.</li>
+</ul>
+
+<h2>4. Requisitos Funcionais dos Frontends</h2>
+
+<h3>4.1 Frontend Web (Desktop)</h3>
+
+<p><strong>Página:</strong> <code>frontend-web/index.html</code></p>
+
+<p><strong>Componentes principais:</strong></p>
+<ul>
+  <li>Card “Criar Conta”:
+    <ul>
+      <li>Campos: Nome, E-mail, CPF, Saldo Inicial.</li>
+      <li>Botão “Criar Conta” (POST /accounts).</li>
+    </ul>
+  </li>
+  <li>Card “Atualizar Conta”:
+    <ul>
+      <li>Campos: ID, Novo Nome, Novo E-mail.</li>
+      <li>Botão “Atualizar” (PUT /accounts/{id}).</li>
+    </ul>
+  </li>
+  <li>Card “Receber Dinheiro (Depósito)”:
+    <ul>
+      <li>Campos: ID, Valor.</li>
+      <li>Botão “Depositar” (POST /accounts/{id}/deposit).</li>
+    </ul>
+  </li>
+  <li>Card “Enviar Dinheiro (Transferência)”:
+    <ul>
+      <li>Campos: ID origem, ID destino, Valor.</li>
+      <li>Botão “Transferir” (POST /accounts/{id}/transfer).</li>
+    </ul>
+  </li>
+  <li>Card “Buscar / Deletar Conta”:
+    <ul>
+      <li>Campo: ID.</li>
+      <li>Botão “Buscar” (GET /accounts/{id}).</li>
+      <li>Botão “Deletar Conta” (DELETE /accounts/{id}).</li>
+    </ul>
+  </li>
+  <li>Card “Resposta da API”:
+    <ul>
+      <li>Área de texto exibindo JSON de resposta.</li>
+      <li>Estilo diferenciado para erro (fundo vermelho).</li>
+    </ul>
+  </li>
+  <li>Seção “Todas as Contas”:
+    <ul>
+      <li>Botão “Atualizar Lista” (GET /accounts).</li>
+      <li>Tabela com ID abreviado, Nome, E-mail, CPF, Saldo.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>4.2 Frontend Mobile-like</h3>
+
+<p><strong>Página:</strong> <code>frontend-mobile/index.html</code></p>
+
+<ul>
+  <li>Barra superior com título do app.</li>
+  <li>Navegação por abas:
+    <ul>
+      <li>🏠 Início</li>
+      <li>➕ Conta</li>
+      <li>🔄 Transações</li>
+      <li>🔍 Buscar</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Aba Início:</strong></p>
+<ul>
+  <li>Card “Saldo Total em Sistema” (soma de todos os <code>balance</code> via GET /accounts).</li>
+  <li>Lista de contas com nome, e-mail, CPF, saldo e ID.</li>
+</ul>
+
+<p><strong>Aba Conta:</strong></p>
+<ul>
+  <li>Formulário com Nome, E-mail, CPF, Saldo Inicial.</li>
+  <li>Botão “Criar Conta” (POST /accounts).</li>
+  <li>Bloco de resposta com JSON.</li>
+</ul>
+
+<p><strong>Aba Transações:</strong></p>
+<ul>
+  <li>Seção Depósito:
+    <ul>
+      <li>Campos: ID da Conta, Valor.</li>
+      <li>Botão “💰 Depositar” (POST /accounts/{id}/deposit).</li>
+    </ul>
+  </li>
+  <li>Seção Transferência:
+    <ul>
+      <li>Campos: ID Conta Origem, ID Conta Destino, Valor.</li>
+      <li>Botão “🔄 Transferir” (POST /accounts/{id}/transfer).</li>
+    </ul>
+  </li>
+  <li>Bloco de resposta compartilhado.</li>
+</ul>
+
+<p><strong>Aba Buscar:</strong></p>
+<ul>
+  <li>Campo de ID.</li>
+  <li>Botão “Buscar” (GET /accounts/{id}).</li>
+  <li>Botão “Deletar Conta” (DELETE /accounts/{id}).</li>
+  <li>Bloco de resposta com JSON.</li>
+</ul>
+
+<h2>5. Requisitos Não Funcionais</h2>
+<ul>
+  <li><strong>Performance:</strong> adequada para uso local; sem SLAs rígidos.</li>
+  <li><strong>Disponibilidade:</strong> sem alta disponibilidade (uso didático).</li>
+  <li><strong>Persistência:</strong> dados em memória; reiniciar o servidor limpa as contas.</li>
+  <li><strong>Segurança:</strong> sem autenticação/autorização.</li>
+  <li><strong>Manutenibilidade:</strong> código simples e modular.</li>
+</ul>
+
+<h2>6. Fluxos Principais (E2E)</h2>
+
+<h3>6.1 Fluxo: Criar Conta, Depositar e Transferir</h3>
+<ol>
+  <li>Criar Conta A com saldo inicial 1000.</li>
+  <li>Criar Conta B com saldo inicial 200.</li>
+  <li>Depositar 500 na Conta A.</li>
+  <li>Transferir 300 da Conta A para Conta B.</li>
+  <li>Verificar saldos finais:
+    <ul>
+      <li>Conta A: 1200.</li>
+      <li>Conta B: 500.</li>
+    </ul>
+  </li>
+</ol>
+<p>
+  Esse fluxo é usado em testes de regressão, na collection do Postman e em demonstrações de ciclo de vida.
+</p>
+
+<h2>7. Critérios de Aceite</h2>
+<ul>
+  <li>Todos os endpoints funcionando conforme especificação.</li>
+  <li>Frontend Web executa todas as operações básicas usando a API.</li>
+  <li>Frontend Mobile-like reflete corretamente os saldos (especialmente saldo total).</li>
+  <li>Swagger documenta todos os endpoints com exemplos.</li>
+  <li>Collection do Postman executa:
+    <ul>
+      <li>CRUD básico.</li>
+      <li>Depósito e transferência.</li>
+      <li>Fluxo E2E completo.</li>
+    </ul>
+  </li>
+</ul>
+
+</body>
+</html>

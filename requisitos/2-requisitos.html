@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Requisitos Funcionais - Banking API</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 960px; margin: 24px auto; line-height: 1.5; }
+    h1, h2, h3, h4 { color: #1f2933; }
+    h1 { border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; }
+    code { background: #f3f4f6; padding: 2px 4px; border-radius: 3px; }
+    ul { margin-left: 20px; }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+    th, td { border: 1px solid #e5e7eb; padding: 6px 8px; text-align: left; }
+    th { background: #f9fafb; }
+    strong { color: #111827; }
+  </style>
+</head>
+<body>
+
+<h1>Requisitos Funcionais — Banking API e Frontends</h1>
+
+<h2>1. Contexto</h2>
+<p>
+  O Banking API é um sistema didático, usado para demonstrar o ciclo de vida de desenvolvimento
+  de software em um contexto simples de banco digital. Ele será utilizado em mentorias e
+  treinamentos de QA, cobrindo desde a definição de requisitos até a execução de casos de teste
+  e regressão.
+</p>
+
+<h2>2. Objetivos</h2>
+<ul>
+  <li>Disponibilizar uma API REST estável e previsível para:
+    <ul>
+      <li>Criação, consulta, atualização e exclusão de contas.</li>
+      <li>Depósito de valores.</li>
+      <li>Transferência de valores entre contas.</li>
+    </ul>
+  </li>
+  <li>Fornecer duas UIs simples:
+    <ul>
+      <li><strong>Frontend Web Desktop</strong>: foco em visualização de dados e operações em cards.</li>
+      <li><strong>Frontend Mobile-like</strong>: foco em navegação por abas e experiência de “app de banco”.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>3. Escopo Funcional</h2>
+
+<h3>3.1 Backend (API REST)</h3>
+
+<p><strong>Entidade principal: Conta Bancária</strong></p>
+
+<p>Campos mínimos:</p>
+<ul>
+  <li><code>id</code> (string, UUID gerado pelo sistema)</li>
+  <li><code>name</code> (string, obrigatório)</li>
+  <li><code>email</code> (string, obrigatório)</li>
+  <li><code>cpf</code> (string, obrigatório, único)</li>
+  <li><code>balance</code> (number, saldo atual)</li>
+  <li><code>createdAt</code> (string, ISO datetime)</li>
+</ul>
+
+<p><strong>Requisitos gerais da API:</strong></p>
+
+<h4>1. Criar conta</h4>
+<ul>
+  <li>Método: <code>POST /accounts</code></li>
+  <li>Body:
+    <ul>
+      <li><code>name</code>: string (obrigatório)</li>
+      <li><code>email</code>: string (obrigatório)</li>
+      <li><code>cpf</code>: string (obrigatório, único)</li>
+      <li><code>initialBalance</code>: number (obrigatório, &gt;= 0)</li>
+    </ul>
+  </li>
+  <li>Regras:
+    <ul>
+      <li>Não permitir <code>initialBalance</code> negativo.</li>
+      <li>Não permitir <code>cpf</code> duplicado.</li>
+    </ul>
+  </li>
+  <li>Respostas:
+    <ul>
+      <li>201 com conta criada (campo <code>balance</code> = <code>initialBalance</code>).</li>
+      <li>400 em caso de campos ausentes, <code>initialBalance</code> inválido ou CPF duplicado.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4>2. Listar contas</h4>
+<ul>
+  <li>Método: <code>GET /accounts</code></li>
+  <li>Regras:
+    <ul>
+      <li>Retornar array de contas (possivelmente vazio).</li>
+    </ul>
+  </li>
+  <li>Resposta: 200 com <code>[]</code> ou lista de contas.</li>
+</ul>
+
+<h4>3. Buscar conta por ID</h4>
+<ul>
+  <li>Método: <code>GET /accounts/{id}</code></li>
+  <li>Regras:
+    <ul>
+      <li>Se não encontrar, retornar 404.</li>
+    </ul>
+  </li>
+  <li>Respostas:
+    <ul>
+      <li>200 com a conta encontrada.</li>
+      <li>404 com <code>{ "error": "Conta não encontrada" }</code>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4>4. Atualizar dados da conta</h4>
+<ul>
+  <li>Método: <code>PUT /accounts/{id}</code></li>
+  <li>Body:
+    <ul>
+      <li><code>name</code>: string (opcional)</li>
+      <li><code>email</code>: string (opcional)</li>
+    </ul>
+  </li>
+  <li>Regras:
+    <ul>
+      <li>Atualizar apenas campos enviados.</li>
+      <li>Não permitir alterar <code>cpf</code> nem <code>balance</code>.</li>
+    </ul>
+  </li>
+  <li>Respostas:
+    <ul>
+      <li>200 com dados atualizados.</li>
+      <li>404 se conta não existir.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4>5. Deletar conta</h4>
+<ul>
+  <li>Método: <code>DELETE /accounts/{id}</code></li>
+  <li>Regras:
+    <ul>
+      <li>Remover conta da memória se existir.</li>
+    </ul>
+  </li>
+  <li>Respostas:
+    <ul>
+      <li>200 com <code>{ "message": "Conta removida com sucesso" }</code>.</li>
+      <li>404 se conta não encontrada.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4>6. Depósito (receber dinheiro)</h4>
+<ul>
+  <li>Método: <code>POST /accounts/{id}/deposit</code></li>
+  <li>Body:
+    <ul>
+      <li><code>amount</code>: number (obrigatório, &gt; 0)</li>
+    </ul>
+  </li>
+  <li>Regras:
+    <ul>
+      <li>Somar o valor ao <code>balance</code> da conta.</li>
+    </ul>
+  </li>
+  <li>Respostas:
+    <ul>
+      <li>200 com <code>{ "message": "Depósito realizado", "balance": &lt;novoSaldo&gt; }</code>.</li>
+      <li>400 se <code>amount</code> &lt;= 0.</li>
+      <li>404 se conta não existir.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4>7. Transferência (enviar dinheiro)</h4>
+<ul>
+  <li>Método: <code>POST /accounts/{id}/transfer</code></li>
+  <li>Body:
+    <ul>
+      <li><code>targetId</code>: string (obrigatório)</li>
+      <li><code>amount</code>: number (obrigatório, &gt; 0)</li>
+    </ul>
+  </li>
+  <li>Regras:
+    <ul>
+      <li>Validar existência de conta origem e destino.</li>
+      <li>Validar saldo suficiente na origem.</li>
+      <li>Proibir transferência para a mesma conta (<code>id == targetId</code>).</li>
+    </ul>
+  </li>
+  <li>Respostas:
+    <ul>
+      <li>200 com <code>{ "message": "Transferência realizada com sucesso", "sourceBalance": ..., "targetBalance": ... }</code>.</li>
+      <li>400 para saldo insuficiente, valor inválido ou origem=destino.</li>
+      <li>404 se origem ou destino não existirem.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>3.2 Documentação da API (Swagger)</h3>
+<ul>
+  <li>Disponibilizar Swagger UI em <code>/api-docs</code>.</li>
+  <li>A documentação deve:
+    <ul>
+      <li>Descrever modelos de request/response.</li>
+      <li>Permitir executar chamadas diretamente.</li>
+      <li>Servir como base para teste manual de API.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>3.3 Frontend Web (Desktop)</h3>
+<ul>
+  <li>Exibir cards para:
+    <ul>
+      <li>Criar conta.</li>
+      <li>Atualizar conta.</li>
+      <li>Depósito.</li>
+      <li>Transferência.</li>
+      <li>Buscar/deletar conta.</li>
+    </ul>
+  </li>
+  <li>Exibir “Resposta da API” em área própria (sucesso/erro).</li>
+  <li>Exibir tabela com ID abreviado, Nome, E-mail, CPF, Saldo.</li>
+  <li>Atualizar tabela após operações que alteram contas.</li>
+</ul>
+
+<h3>3.4 Frontend Mobile-like</h3>
+<ul>
+  <li>Layout com navegação por abas:
+    <ul>
+      <li>🏠 Início</li>
+      <li>➕ Conta</li>
+      <li>🔄 Transações</li>
+      <li>🔍 Buscar</li>
+    </ul>
+  </li>
+  <li>Aba Início:
+    <ul>
+      <li>Card de “Saldo Total em Sistema”.</li>
+      <li>Lista de contas com dados principais.</li>
+    </ul>
+  </li>
+  <li>Aba Conta:
+    <ul>
+      <li>Formulário de criação de conta.</li>
+    </ul>
+  </li>
+  <li>Aba Transações:
+    <ul>
+      <li>Formulário de Depósito e de Transferência.</li>
+    </ul>
+  </li>
+  <li>Aba Buscar:
+    <ul>
+      <li>Buscar conta por ID.</li>
+      <li>Deletar conta por ID.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>4. Restrições e Decisões</h2>
+<ul>
+  <li>Armazenamento em memória (array em <code>db.js</code>).</li>
+  <li>Stack:
+    <ul>
+      <li>Backend: Node.js + Express.</li>
+      <li>Doc: Swagger.</li>
+      <li>Frontend: HTML + CSS + JS simples.</li>
+    </ul>
+  </li>
+  <li>Sem internacionalização/multilíngue.</li>
+</ul>
+
+<h2>5. Critérios de Aceite (High Level)</h2>
+<ul>
+  <li>Todos os endpoints descritos implementados e acessíveis.</li>
+  <li>Swagger acessível em <code>/api-docs</code>.</li>
+  <li>Ambos os frontends funcionando contra a mesma API.</li>
+  <li>Fluxos principais (criar conta, depósito, transferência, deletar) funcionando ponta a ponta.</li>
+</ul>
+
+</body>
+</html>

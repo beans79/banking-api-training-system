@@ -1,0 +1,1219 @@
+{
+  "info": {
+    "_postman_id": "8fcdbef5-c665-449f-95e5-43bcb28527f3",
+    "name": "Banking API",
+    "description": "Collection completa, cobre CRUD de contas, depósito e transferência. Inclui testes automáticos (pm.test) em cada request.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "accountIdA",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "accountIdB",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 — CRUD de Contas",
+      "item": [
+        {
+          "name": "TC-001 | POST Criar Conta A (válida)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// TC-001: Criar conta com dados válidos",
+                  "pm.test('TC-001 | Status deve ser 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('TC-001 | Response deve conter id', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('id');",
+                  "    pm.collectionVariables.set('accountIdA', json.id);",
+                  "    console.log('Conta A criada com ID:', json.id);",
+                  "});",
+                  "",
+                  "pm.test('TC-001 | Nome deve ser João Silva', function () {",
+                  "    pm.expect(pm.response.json().name).to.eql('João Silva');",
+                  "});",
+                  "",
+                  "pm.test('TC-001 | Saldo inicial deve ser 1000', function () {",
+                  "    pm.expect(pm.response.json().balance).to.eql(1000);",
+                  "});",
+                  "",
+                  "pm.test('TC-001 | Response deve conter createdAt', function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('createdAt');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"João Silva\",\n  \"email\": \"joao@email.com\",\n  \"cpf\": \"111.111.111-11\",\n  \"initialBalance\": 1000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-002 | POST Criar Conta B (válida)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-002 | Status deve ser 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('TC-002 | Conta B ID salvo na variável', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('id');",
+                  "    pm.collectionVariables.set('accountIdB', json.id);",
+                  "    console.log('Conta B criada com ID:', json.id);",
+                  "});",
+                  "",
+                  "pm.test('TC-002 | Saldo inicial deve ser 200', function () {",
+                  "    pm.expect(pm.response.json().balance).to.eql(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Maria Santos\",\n  \"email\": \"maria@email.com\",\n  \"cpf\": \"222.222.222-22\",\n  \"initialBalance\": 200\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-003 | POST Criar Conta — sem campo 'name' (negativo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-003 | Status deve ser 400 Bad Request', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('TC-003 | Mensagem de erro deve estar presente', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('error');",
+                  "});",
+                  "",
+                  "pm.test('TC-003 | Erro deve mencionar campos obrigatórios', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.error).to.include('obrigatórios');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"semname@email.com\",\n  \"cpf\": \"999.999.999-99\",\n  \"initialBalance\": 100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-004 | POST Criar Conta — CPF duplicado (negativo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-004 | Status deve ser 400 Bad Request', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('TC-004 | Erro deve mencionar CPF já cadastrado', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.error).to.include('CPF');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"CPF Duplicado\",\n  \"email\": \"dup@email.com\",\n  \"cpf\": \"111.111.111-11\",\n  \"initialBalance\": 50\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-005 | POST Criar Conta — saldo inicial negativo (negativo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-005 | Status deve ser 400 Bad Request', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('TC-005 | Erro deve mencionar initialBalance', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Saldo Negativo\",\n  \"email\": \"neg@email.com\",\n  \"cpf\": \"888.888.888-88\",\n  \"initialBalance\": -100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-006 | GET Listar todas as contas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-006 | Status deve ser 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('TC-006 | Response deve ser um array', function () {",
+                  "    pm.expect(pm.response.json()).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('TC-006 | Deve ter pelo menos 2 contas', function () {",
+                  "    pm.expect(pm.response.json().length).to.be.at.least(2);",
+                  "});",
+                  "",
+                  "pm.test('TC-006 | Cada conta deve ter os campos obrigatórios', function () {",
+                  "    var accounts = pm.response.json();",
+                  "    accounts.forEach(function(acc) {",
+                  "        pm.expect(acc).to.have.all.keys('id', 'name', 'email', 'cpf', 'balance', 'createdAt');",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-007 | GET Buscar Conta A por ID (válido)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-007 | Status deve ser 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('TC-007 | ID retornado deve bater com o da variável', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.id).to.eql(pm.collectionVariables.get('accountIdA'));",
+                  "});",
+                  "",
+                  "pm.test('TC-007 | Nome deve ser João Silva', function () {",
+                  "    pm.expect(pm.response.json().name).to.eql('João Silva');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-008 | GET Buscar Conta — ID inexistente (negativo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-008 | Status deve ser 404 Not Found', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test('TC-008 | Mensagem de erro deve estar presente', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/00000000-0000-0000-0000-000000000000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-009 | PUT Atualizar Conta A",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-009 | Status deve ser 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('TC-009 | Nome deve estar atualizado', function () {",
+                  "    pm.expect(pm.response.json().name).to.eql('João Silva Atualizado');",
+                  "});",
+                  "",
+                  "pm.test('TC-009 | Email deve estar atualizado', function () {",
+                  "    pm.expect(pm.response.json().email).to.eql('joao.novo@email.com');",
+                  "});",
+                  "",
+                  "pm.test('TC-009 | CPF não deve mudar', function () {",
+                  "    pm.expect(pm.response.json().cpf).to.eql('111.111.111-11');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"João Silva Atualizado\",\n  \"email\": \"joao.novo@email.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 — Transações (Depósito e Transferência)",
+      "item": [
+        {
+          "name": "TC-010 | POST Depósito válido na Conta A",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-010 | Status deve ser 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('TC-010 | Mensagem deve ser Depósito realizado', function () {",
+                  "    pm.expect(pm.response.json().message).to.include('Depósito');",
+                  "});",
+                  "",
+                  "pm.test('TC-010 | Saldo deve ser 1500 (1000 + 500)', function () {",
+                  "    pm.expect(pm.response.json().balance).to.eql(1500);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 500\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}/deposit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}",
+                "deposit"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-011 | POST Depósito — valor zero (negativo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-011 | Status deve ser 400 Bad Request', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('TC-011 | Erro deve mencionar amount', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}/deposit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}",
+                "deposit"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-012 | POST Depósito — valor negativo (negativo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-012 | Status deve ser 400 Bad Request', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('TC-012 | Deve retornar erro de validação', function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": -50\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}/deposit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}",
+                "deposit"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-013 | POST Transferência válida A → B",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-013 | Status deve ser 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('TC-013 | Mensagem de sucesso presente', function () {",
+                  "    pm.expect(pm.response.json().message).to.include('sucesso');",
+                  "});",
+                  "",
+                  "pm.test('TC-013 | sourceBalance deve ser 1200 (1500 - 300)', function () {",
+                  "    pm.expect(pm.response.json().sourceBalance).to.eql(1200);",
+                  "});",
+                  "",
+                  "pm.test('TC-013 | targetBalance deve ser 500 (200 + 300)', function () {",
+                  "    pm.expect(pm.response.json().targetBalance).to.eql(500);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"targetId\": \"{{accountIdB}}\",\n  \"amount\": 300\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}/transfer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}",
+                "transfer"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-014 | POST Transferência — saldo insuficiente (negativo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-014 | Status deve ser 400 Bad Request', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('TC-014 | Erro deve ser Saldo insuficiente', function () {",
+                  "    pm.expect(pm.response.json().error).to.include('Saldo insuficiente');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"targetId\": \"{{accountIdB}}\",\n  \"amount\": 999999\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}/transfer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}",
+                "transfer"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-015 | POST Transferência — conta destino inexistente (negativo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-015 | Status deve ser 404 Not Found', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test('TC-015 | Erro deve mencionar conta destino', function () {",
+                  "    pm.expect(pm.response.json().error).to.include('destino');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"targetId\": \"00000000-0000-0000-0000-000000000000\",\n  \"amount\": 50\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}/transfer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}",
+                "transfer"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-016 | POST Transferência — origem = destino (negativo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-016 | Status deve ser 400 Bad Request', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('TC-016 | Erro deve indicar contas iguais', function () {",
+                  "    pm.expect(pm.response.json().error).to.include('iguais');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"targetId\": \"{{accountIdA}}\",\n  \"amount\": 100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}/transfer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}",
+                "transfer"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 — Deletar Conta",
+      "item": [
+        {
+          "name": "TC-017 | DELETE Deletar Conta A (válida)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-017 | Status deve ser 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('TC-017 | Mensagem de sucesso presente', function () {",
+                  "    pm.expect(pm.response.json().message).to.include('sucesso');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-018 | GET Verificar Conta A deletada (404 esperado)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-018 | Conta deletada deve retornar 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test('TC-018 | Erro deve ser Conta não encontrada', function () {",
+                  "    pm.expect(pm.response.json().error).to.include('não encontrada');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC-019 | DELETE Conta — ID inexistente (negativo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-019 | Status deve ser 404 Not Found', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/00000000-0000-0000-0000-000000000000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 — 🔄 Regressão E2E (Fluxo Completo)",
+      "description": "Execute esta pasta em sequência para validar o fluxo completo da API. Os IDs são passados automaticamente entre requests via variáveis de coleção.",
+      "item": [
+        {
+          "name": "E2E-01 | Criar Conta E2E-A",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('E2E-01 | 201 Created', function(){ pm.response.to.have.status(201); });",
+                  "var json = pm.response.json();",
+                  "pm.collectionVariables.set('accountIdA', json.id);",
+                  "pm.test('E2E-01 | ID da Conta A salvo', function(){ pm.expect(json.id).to.be.a('string'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"E2E Conta A\",\n  \"email\": \"e2ea@email.com\",\n  \"cpf\": \"101.010.101-01\",\n  \"initialBalance\": 1000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "E2E-02 | Criar Conta E2E-B",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('E2E-02 | 201 Created', function(){ pm.response.to.have.status(201); });",
+                  "pm.collectionVariables.set('accountIdB', pm.response.json().id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"E2E Conta B\",\n  \"email\": \"e2eb@email.com\",\n  \"cpf\": \"202.020.202-02\",\n  \"initialBalance\": 200\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "E2E-03 | Listar (espera 2+ contas)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('E2E-03 | 200 OK', function(){ pm.response.to.have.status(200); });",
+                  "pm.test('E2E-03 | Mínimo 2 contas', function(){ pm.expect(pm.response.json().length).to.be.at.least(2); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "E2E-04 | Depositar R$500 na Conta A",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('E2E-04 | 200 OK', function(){ pm.response.to.have.status(200); });",
+                  "pm.test('E2E-04 | Saldo = 1500', function(){ pm.expect(pm.response.json().balance).to.eql(1500); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 500\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}/deposit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}",
+                "deposit"
+              ]
+            }
+          }
+        },
+        {
+          "name": "E2E-05 | Transferir R$300 de A para B",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('E2E-05 | 200 OK', function(){ pm.response.to.have.status(200); });",
+                  "pm.test('E2E-05 | Saldo A = 1200', function(){ pm.expect(pm.response.json().sourceBalance).to.eql(1200); });",
+                  "pm.test('E2E-05 | Saldo B = 500', function(){ pm.expect(pm.response.json().targetBalance).to.eql(500); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"targetId\": \"{{accountIdB}}\",\n  \"amount\": 300\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}/transfer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}",
+                "transfer"
+              ]
+            }
+          }
+        },
+        {
+          "name": "E2E-06 | Verificar saldo Conta B = 500",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('E2E-06 | 200 OK', function(){ pm.response.to.have.status(200); });",
+                  "pm.test('E2E-06 | Saldo Conta B = 500', function(){ pm.expect(pm.response.json().balance).to.eql(500); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdB}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdB}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "E2E-07 | Atualizar nome da Conta B",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('E2E-07 | 200 OK', function(){ pm.response.to.have.status(200); });",
+                  "pm.test('E2E-07 | Nome atualizado', function(){ pm.expect(pm.response.json().name).to.eql('E2E Conta B Atualizada'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"E2E Conta B Atualizada\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdB}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdB}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "E2E-08 | Deletar Conta A",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('E2E-08 | 200 OK', function(){ pm.response.to.have.status(200); });",
+                  "pm.test('E2E-08 | Mensagem de sucesso', function(){ pm.expect(pm.response.json().message).to.include('sucesso'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "E2E-09 | Confirmar Conta A deletada (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('E2E-09 | Conta A deve retornar 404', function(){ pm.response.to.have.status(404); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts/{{accountIdA}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountIdA}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "E2E-10 | Listar — apenas Conta B deve existir",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('E2E-10 | 200 OK', function(){ pm.response.to.have.status(200); });",
+                  "pm.test('E2E-10 | Conta B ainda existe na lista', function(){",
+                  "    var ids = pm.response.json().map(function(a){ return a.id; });",
+                  "    pm.expect(ids).to.include(pm.collectionVariables.get('accountIdB'));",
+                  "});",
+                  "pm.test('E2E-10 | Conta A não existe mais na lista', function(){",
+                  "    var ids = pm.response.json().map(function(a){ return a.id; });",
+                  "    pm.expect(ids).to.not.include(pm.collectionVariables.get('accountIdA'));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
