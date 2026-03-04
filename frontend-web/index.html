@@ -329,6 +329,8 @@
             font-family: 'Courier New', monospace;
             font-size: 12px;
             opacity: 0.7;
+            word-break: break-all; /* allow wrapping if the ID is too long */
+            max-width: 180px; /* constrain width for layout */
         }
 
         .account-balance {
@@ -724,9 +726,10 @@
                         </tr>
                     `;
                 } else {
+                    // display full ID so user can copy it; let CSS handle wrapping if needed
                     tbody.innerHTML = accounts.map(acc => `
                         <tr>
-                            <td class="account-id">${acc.id.substring(0, 8)}...</td>
+                            <td class="account-id">${acc.id}</td>
                             <td>${acc.name}</td>
                             <td>${acc.email}</td>
                             <td>${acc.cpf}</td>
