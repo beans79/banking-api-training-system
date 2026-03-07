@@ -1,0 +1,11 @@
+{
+  "name": "banking-api-cypress",
+  "version": "1.0.0",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
+  },
+  "devDependencies": {
+    "cypress": "^15.11.0"
+  }
+}
