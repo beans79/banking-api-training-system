@@ -1,0 +1,23 @@
+{
+  "name": "banking-api-training-system",
+  "version": "1.0.0",
+  "description": "```\r banking-api/\r ├── backend/\r │   ├── package.json\r │   ├── server.js\r │   ├── db.js\r │   └── routes/\r │       └── accounts.js\r ├── frontend-web/\r │   └── index.html\r ├── frontend-mobile/\r │   └── index.html\r └── README.md\r ```",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beans79/banking-api-training-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/beans79/banking-api-training-system/issues"
+  },
+  "homepage": "https://github.com/beans79/banking-api-training-system#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.6.0"
+  }
+}
